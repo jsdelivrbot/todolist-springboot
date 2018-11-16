@@ -42,15 +42,15 @@
 
     <div id="list">
         <div id="item_1" class="list_item">
-            <img id="item_1_image" src="checked.png">
+            <img id="item_1_image" src="images/checked.png">
             <span class="item_text"> Unordered list item sdfasdf</span>
         </div>
         <div id="item_2" class="list_item">
-            <img id="item_2_image" src="checked.png">
+            <img id="item_2_image" src="images/checked.png">
             <span class="item_text"> Unordered list item 1</span>
         </div>
         <div id="item_3" class="list_item">
-            <img id="item_3_image" src="checked.png">
+            <img id="item_3_image" src="images/checked.png">
             <span class="item_text"> Unordered list item 1</span>
         </div>
     </div>
@@ -75,7 +75,7 @@
 
     $( "#list" ).append( `
       <div id="item_${newTaskId}" class="list_item">
-        <img id="item_${newTaskId}_image" src="unchecked.png">
+        <img id="item_${newTaskId}_image" src="images/unchecked.png">
         <span class="item_text"> ${newTaskText}</span>
       </div>
     ` );
@@ -89,9 +89,9 @@
      var isCurrentlyChecked = itemImage.src.indexOf("unchecked") === -1;
 
      if (isCurrentlyChecked) {
-       $("#" + itemImage.id).attr('src', 'unchecked.png');
+       $("#" + itemImage.id).attr('src', 'images/unchecked.png');
      } else {
-       $("#" + itemImage.id).attr('src', 'checked.png');
+       $("#" + itemImage.id).attr('src', 'images/checked.png');
      }
 
     $.ajax({

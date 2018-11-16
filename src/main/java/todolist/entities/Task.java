@@ -9,9 +9,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false, unique = true)
-    private String title;
-
-    @Column(nullable = false)
-    private String author;
+    @Column(nullable = false, unique = false)
+    private String name;
 }
