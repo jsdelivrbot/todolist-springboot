@@ -1,34 +1,40 @@
 package todolist.entities;
 
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import javax.persistence.*;
 
-//@Entity
-@Data
+@Entity
 public class Task {
 
-  //  @Id
-   // @GeneratedValue(strategy = GenerationType.AUTO)
+    public Task() { } // for deserialization
 
-    public Task() {
-            // for deserialization
-    }
-
-    public Task(String name) {
+    public Task(long id, String name, boolean isComplete) {
+        this.id = id;
         this.name = name;
-        this.id = UUID.randomUUID().toString();
+        this.isComplete = isComplete;
     }
 
+    @Id
     @Getter
-    private String id;
-
- //   @Column(nullable = false, unique = false)
+    @Setter
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     @Getter
     @Setter
+    @Column(nullable = false, unique = false)
     private String name;
+
+    @Getter
+    @Setter
+    @Column
+    private boolean isComplete = false; // all new tasks are incomplete
+
+    @Override
+    public String toString() {
+        return "Name: " + this.name + ", id: " + this.id + ", isComplete: " + this.isComplete;
+    }
 }

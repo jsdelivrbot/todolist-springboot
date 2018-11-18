@@ -4,38 +4,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import todolist.entities.Task;
-//import todolist.repos.TaskRepository;
+import todolist.repos.TaskRepository;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/task")
 public class TaskController {
 
-    List<Task> allTasks = new ArrayList<>();
+    @Autowired
+    private TaskRepository taskRepository;
 
-   // @Autowired
-   // private TaskRepository taskRepository;
+    @GetMapping("/{id}")
+    public Task getTask(@PathVariable long id) {
 
-    @GetMapping("/id/{taskId}")
-    public Task getTask(@PathVariable String taskId) {
-       // return taskRepository.getById(taskId);
+        System.out.println("fetching task with id: " + id);
 
-        System.out.println("fetching task with id: " + taskId);
+        Task task = taskRepository.findById(id);
 
-        Optional<Task> task = fetchTask(taskId);
+        if (task == null) {
+            // TODO
+        }
 
-        System.out.println("found: " + task);
-
-        // if (task.isEmpty()) {
-        // TODO
-        // }
-
-        return task.get();
+        return task;
     }
 
     @GetMapping("/all")
@@ -44,67 +35,51 @@ public class TaskController {
 
         System.out.println("returning all tasks...");
 
-        return allTasks;
+        return taskRepository.findAll();
     }
 
     @PutMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     public Task newTask(@RequestBody Task task) {
 
-        // NOTE: This works; just submit all bodies as "application/json" format
+        /*
+         * This method expects application/json HTTP format.
+         */
 
         System.out.println("Payload: " + task);
 
-      //  System.out.print("new task with name: " + payload.get("name"));
-       // Task task = new Task("test");//payload.get("name"));
-        allTasks.add(task);
-
-        return task;
-       // taskRepository.create(name);
+        return taskRepository.save(task);
     }
 
-    @PostMapping("/update/{taskId}")
-    public void updateTask(@RequestBody String name, @PathVariable String taskId) {
+    @PostMapping("/update")
+    public Task updateTask(@RequestBody Task task) {
 
-        System.out.println("update task " + taskId + " with name " + name);
+        System.out.println("update task: " + task);
+
+        /*
+         * This method expects application/json HTTP format.
+         */
 
 
-        Optional<Task> task = fetchTask(taskId);
-
-       // if (task.isEmpty()) {
+        if (!taskRepository.existsById(task.getId())) {
             // TODO
-        //}
-
-        task.get().setName(name);
-
-        //taskRepository.update(name, taskId);
-    }
-
-    @DeleteMapping("/delete/{taskId}")
-    public void deleteTask(@PathVariable String taskId) {
-      //  taskRepository.delete(taskId);
-
-        System.out.println("deleting task: " + taskId);
-
-        Optional<Task> task = fetchTask(taskId);
-
-     //   if (task.isEmpty()) {
-            /// TODO
-      //  }
-
-        allTasks.remove(task.get());
-    }
-
-    private Optional<Task> fetchTask(String taskId) {
-        Optional<Task> t = Optional.empty();
-
-        for (Task task : allTasks) {
-            if (task.getId().equals(taskId)) {
-                t = Optional.of(task);
-            }
         }
 
-        return t;
+        // TODO - validate name/etc in all scenarios
+
+        return taskRepository.save(task);
     }
 
+    @DeleteMapping("/{id}/delete")
+    public void deleteTask(@PathVariable long id) {
+        System.out.println("deleting task: " + id);
+
+        Task task = taskRepository.findById(id);
+
+        if (task == null) {
+            // TODO
+        }
+
+        taskRepository.delete(task);
+    }
 }
