@@ -1,9 +1,8 @@
 <html>
 <head>
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
-    <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
-    <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
-    <link rel="stylesheet" href="/Users/cseales/Desktop/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <style>
@@ -13,6 +12,7 @@
         padding: 10px;
     }
     body {
+      color: black;
       background-color: #AED6F1;
       font-family: 'Roboto', 'Helvetica Neue', 'Helvetica';
     }
@@ -34,6 +34,10 @@
     .create_task_button {
       margin-left: 10px;
     }
+    #new_task_text {
+      background: white;
+      max-width: 50%;
+    }
 </style>
 <body>
 <div class="home">
@@ -46,11 +50,11 @@
             <span class="item_text"> Unordered list item sdfasdf</span>
         </div>
         <div id="item_2" class="list_item">
-            <img id="item_2_image" src="/static/images/checked.png">
+            <img id="item_2_image" src="static/images/checked.png">
             <span class="item_text"> Unordered list item 1</span>
         </div>
         <div id="item_3" class="list_item">
-            <img id="item_3_image" src="/images/checked.png">
+            <img id="item_3_image" src="static/images/checked.png">
             <span class="item_text"> Unordered list item 1</span>
         </div>
     </div>
@@ -75,7 +79,7 @@
 
     $( "#list" ).append( `
       <div id="item_${newTaskId}" class="list_item">
-        <img id="item_${newTaskId}_image" src="images/unchecked.png">
+        <img id="item_${newTaskId}_image" src="static/images/unchecked.png">
         <span class="item_text"> ${newTaskText}</span>
       </div>
     ` );
@@ -89,9 +93,9 @@
      var isCurrentlyChecked = itemImage.src.indexOf("unchecked") === -1;
 
      if (isCurrentlyChecked) {
-       $("#" + itemImage.id).attr('src', 'images/unchecked.png');
+       $("#" + itemImage.id).attr('src', 'static/images/unchecked.png');
      } else {
-       $("#" + itemImage.id).attr('src', 'images/checked.png');
+       $("#" + itemImage.id).attr('src', 'static/images/checked.png');
      }
 
     $.ajax({

@@ -1,0 +1,78 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<style>
+    .home {
+        width: 50%;
+        margin: auto;
+        padding: 10px;
+    }
+    body {
+      color: black;
+      background-color: #AED6F1;
+      font-family: 'Roboto', 'Helvetica Neue', 'Helvetica';
+    }
+    .list_item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+    }
+    .field {
+        display: flex;
+    }
+    .text_input {
+      margin-left: 15px;
+      display:block;
+      word-wrap:break-word;
+      background: white !important;
+      max-width: 50%;
+    }
+</style>
+<body>
+<div class="home">
+    <h1>Signup</h1>
+    <form id="signup">
+
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <span><b>Email</b></span>
+            </td>
+            <td>
+              <input type="text" id="email" class="text_input" value="person@example.com">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span><b>Confirm email</b></span>
+            </td>
+            <td>
+              <input type="text" id="email" class="text_input" value="person@example.com">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span><b>Password</b></span>
+            </td>
+            <td>
+              <input type="password" id="password" class="text_input" value="password">
+            </td>
+          </tr>
+        </tbody>
+        </table>
+        <input class="signup_button" type="submit" value="Signup">
+    </form>
+
+</div>
+</body>
+<script>
+
+  /* TODO */
+
+</script>
+</html>

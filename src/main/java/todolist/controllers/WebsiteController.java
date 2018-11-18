@@ -14,4 +14,16 @@ public class WebsiteController {
         model.addAttribute("appName", "AS:LDFKMSDF:LKSDFJ");
         return "home";
     }
+
+    @RequestMapping("/login")
+    public String loginPage(Model model) {
+        model.addAttribute("appName", "AS:LDFKMSDF:LKSDFJ");
+        return "login";
+    }
+
+    @RequestMapping("/signup")
+    public String signupPage(Model model) {
+        model.addAttribute("appName", "AS:LDFKMSDF:LKSDFJ");
+        return "login";
+    }
 }
