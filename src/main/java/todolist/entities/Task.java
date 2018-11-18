@@ -1,14 +1,34 @@
 package todolist.entities;
 
-import javax.persistence.*;
 
-@Entity
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.UUID;
+
+//@Entity
+@Data
 public class Task {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+  //  @Id
+   // @GeneratedValue(strategy = GenerationType.AUTO)
 
-    @Column(nullable = false, unique = false)
+    public Task() {
+            // for deserialization
+    }
+
+    public Task(String name) {
+        this.name = name;
+        this.id = UUID.randomUUID().toString();
+    }
+
+    @Getter
+    private String id;
+
+ //   @Column(nullable = false, unique = false)
+
+    @Getter
+    @Setter
     private String name;
 }
