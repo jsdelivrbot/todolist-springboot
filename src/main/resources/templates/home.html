@@ -128,6 +128,7 @@
           ALL_TASKS.push(response);
 
           appendToList(taskId, newTaskText, completed)
+          $("#new_task_text").val('Create new task...');
         },
         error: function(e) {
           // TODO
