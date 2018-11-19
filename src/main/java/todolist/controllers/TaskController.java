@@ -53,7 +53,7 @@ public class TaskController {
 
         validateTask(task); // validate before create
 
-        logger.info("Creating new task with name {}" + task.getName());
+        logger.info("Creating new task with name {}", task.getName());
         return taskRepository.save(task);
     }
 
