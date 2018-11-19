@@ -9,19 +9,6 @@ public class WebsiteController {
 
     @RequestMapping("/")
     public String homePage(Model model) {
-        model.addAttribute("appName", "AS:LDFKMSDF:LKSDFJ");
         return "home";
-    }
-
-    @RequestMapping("/login")
-    public String loginPage(Model model) {
-        model.addAttribute("appName", "AS:LDFKMSDF:LKSDFJ");
-        return "login";
-    }
-
-    @RequestMapping("/signup")
-    public String signupPage(Model model) {
-        model.addAttribute("appName", "AS:LDFKMSDF:LKSDFJ");
-        return "signup";
     }
 }

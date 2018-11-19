@@ -46,7 +46,6 @@
 <body>
   <div class="home">
     <h1>TodoList</h1>
-    <p>Welcome to <span th:text="${appName}">Our App</span> </p>
 
     <div id="list"> </div>
 
@@ -59,8 +58,8 @@
 
     <hr/>
 
-    <div id="item_${taskId}" class="list_item">
-      <img id="item_${taskId}_image" src="/Users/cseales/Desktop/unchecked.png">
+    <div id="show_completed_tasks_toggle" class="list_item">
+      <img id="show_completed_tasks_img" src="/Users/cseales/Desktop/unchecked.png">
       <span class="item_text">Show completed tasks</span>
     </div>
 
@@ -69,6 +68,7 @@
 
     var API_URL = "http://localhost:8080/api/task";
     var SHOW_COMPLETED_TASKS = false;
+    var ALL_TASKS = [];
 
     $(document).ready(function() {
       $.ajax({
@@ -78,22 +78,41 @@
           console.log("all response...");
           console.dir(response)
 
+          ALL_TASKS = response;
+
+/*
           for (var i = 0; i < response.length; i++) {
 
             var task = response[i];
-            console.log('task...')
+            console.log("pushing...")
             console.dir(task)
-
-            if (!task.completed || (task.completed && SHOW_COMPLETED_TASKS)) {
-                appendToList(task.id, task.name, task.completed);
-            }
+            ALL_TASKS.push(task);
           }
+          */
+
+          refreshList();
         },
         error: function(e) {
           // TODO
         }
       });
     });
+
+    function refreshList() {
+      console.log('task...')
+
+      $("#list").empty();
+
+      console.dir(ALL_TASKS)
+
+      for (var i = 0; i < ALL_TASKS.length; i++) {
+
+        var task = ALL_TASKS[i];
+        if (!task.completed || (task.completed && SHOW_COMPLETED_TASKS)) {
+            appendToList(task.id, task.name, task.completed);
+        }
+      }
+    }
 
     function appendToList(taskId, taskName, completed) {
 
@@ -110,6 +129,18 @@
     function removeFromList(taskId) {
       $(`#item_${taskId}`).remove();
     }
+
+    $("#show_completed_tasks_toggle").click(function(event) {
+
+      console.log("SHOW")
+      SHOW_COMPLETED_TASKS = !SHOW_COMPLETED_TASKS; // invert selection
+
+      var image = SHOW_COMPLETED_TASKS ? "checked" : "unchecked";
+
+      $("#show_completed_tasks_img").attr('src', `/Users/cseales/Desktop/${image}.png`);
+
+      refreshList()
+    });
 
     $("#new_task").submit(function(event) {
       console.log("NEW TASK: " + $("#new_task_text").val())
@@ -149,15 +180,23 @@
       var itemImage = $(this).children('img')[0];
       var isCurrentlyChecked = itemImage.src.indexOf("unchecked") === -1;
 
+      var updatedTask = {
+        id: taskId,
+        name: "todo",
+        completed: !isCurrentlyChecked
+      };
+
+      for (var i = 0; i < ALL_TASKS.length; i++) {
+        if (ALL_TASKS[i].id == taskId) {
+          ALL_TASKS[i] = updatedTask;
+        }
+      }
+
       $.ajax({
         url: API_URL + "/update",
         contentType: "application/json",
         type: 'POST',
-        data: JSON.stringify({
-          id: taskId,
-          name: "todo",
-          completed: !isCurrentlyChecked
-        }),
+        data: JSON.stringify(updatedTask),
         success: function(reponse) {
 
           if (isCurrentlyChecked) {
