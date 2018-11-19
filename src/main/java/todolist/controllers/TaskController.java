@@ -38,8 +38,9 @@ public class TaskController {
 
     @GetMapping("/all")
     public List<Task> getAllTasks() {
-        logger.info("Returning all tasks.");
-        return taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+        logger.info("Returning all of {} tasks.", tasks.size());
+        return tasks;
     }
 
     @PutMapping("/new")

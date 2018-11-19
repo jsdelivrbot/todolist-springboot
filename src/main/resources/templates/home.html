@@ -50,7 +50,7 @@
     <hr />
 
     <div id="show_completed_tasks_toggle" class="list_item">
-      <img id="show_completed_tasks_img" src="/Users/cseales/Desktop/unchecked.png">
+      <img id="show_completed_tasks_img" src="images/unchecked.png">
       <span class="item_text">Show completed tasks</span>
     </div>
 
@@ -65,21 +65,7 @@
         url: API_URL + "/all",
         type: 'GET',
         success: function(response) {
-          console.log("all response...");
-          console.dir(response)
-
           ALL_TASKS = response;
-
-          /*
-                    for (var i = 0; i < response.length; i++) {
-
-                      var task = response[i];
-                      console.log("pushing...")
-                      console.dir(task)
-                      ALL_TASKS.push(task);
-                    }
-                    */
-
           refreshList();
         },
         error: function(e) {
@@ -89,11 +75,7 @@
     });
 
     function refreshList() {
-      console.log('task...')
-
       $("#list").empty();
-
-      console.dir(ALL_TASKS)
 
       for (var i = 0; i < ALL_TASKS.length; i++) {
 
@@ -110,7 +92,7 @@
 
       $("#list").append(`
       <div id="item_${taskId}" class="list_item">
-        <img id="item_${taskId}_image" src="/Users/cseales/Desktop/${image}.png">
+        <img id="item_${taskId}_image" src="images/${image}.png">
         <span class="item_text"> ${taskName}</span>
       </div>
     `);
@@ -121,20 +103,15 @@
     }
 
     $("#show_completed_tasks_toggle").click(function(event) {
-
-      console.log("SHOW")
       SHOW_COMPLETED_TASKS = !SHOW_COMPLETED_TASKS; // invert selection
 
       var image = SHOW_COMPLETED_TASKS ? "checked" : "unchecked";
+      $("#show_completed_tasks_img").attr('src', `images/${image}.png`);
 
-      $("#show_completed_tasks_img").attr('src', `/Users/cseales/Desktop/${image}.png`);
-
-      refreshList()
+      refreshList();
     });
 
     $("#new_task").submit(function(event) {
-      console.log("NEW TASK: " + $("#new_task_text").val())
-      console.dir($("#list"))
 
       var newTaskText = $("#new_task_text").val();
       $.ajax({
@@ -148,11 +125,12 @@
           var taskId = response.id; // append to list using server-assigned ID
           var completed = false; // all new tasks are incomplete
 
+          ALL_TASKS.push(response);
+
           appendToList(taskId, newTaskText, completed)
         },
         error: function(e) {
           // TODO
-          console.dir(e)
         }
       });
 
@@ -161,18 +139,15 @@
 
     $('#list').on('click', '.list_item', function() {
 
-      console.dir(this);
-
       var taskId = this.id.split("_")[1];
-
-      console.log("taskId: " + taskId)
+      var taskName = this.children[1].innerText;
 
       var itemImage = $(this).children('img')[0];
       var isCurrentlyChecked = itemImage.src.indexOf("unchecked") === -1;
 
       var updatedTask = {
         id: taskId,
-        name: "todo",
+        name: taskName,
         completed: !isCurrentlyChecked
       };
 
@@ -190,11 +165,11 @@
         success: function(reponse) {
 
           if (isCurrentlyChecked) {
-            $("#" + itemImage.id).attr('src', '/Users/cseales/Desktop/unchecked.png');
+            $("#" + itemImage.id).attr('src', 'images/unchecked.png');
           } else {
 
             if (SHOW_COMPLETED_TASKS) {
-              $("#" + itemImage.id).attr('src', '/Users/cseales/Desktop/checked.png');
+              $("#" + itemImage.id).attr('src', 'images/checked.png');
             } else {
               removeFromList(taskId);
             }
