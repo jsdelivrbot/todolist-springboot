@@ -6,20 +6,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
   <link rel="stylesheet" href="https://cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
   <link rel="stylesheet" href="https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+  <link rel="stylesheet" href="css/todolist.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <style>
-  .content {
-        width: 50%;
-        margin: auto;
-        padding: 10px;
-    }
-    body {
-      color: black;
-      background-color: #AED6F1;
-      font-family: 'Roboto', 'Helvetica Neue', 'Helvetica';
-    }
-    .list_item {
+  .list_item {
       display: flex;
       align-items: center;
       padding: 10px;
@@ -56,7 +47,7 @@
         </div>
     </form>
 
-    <hr/>
+    <hr />
 
     <div id="show_completed_tasks_toggle" class="list_item">
       <img id="show_completed_tasks_img" src="/Users/cseales/Desktop/unchecked.png">
@@ -65,7 +56,6 @@
 
   </div>
   <script>
-
     var API_URL = "http://localhost:8080/api/task";
     var SHOW_COMPLETED_TASKS = false;
     var ALL_TASKS = [];
@@ -80,15 +70,15 @@
 
           ALL_TASKS = response;
 
-/*
-          for (var i = 0; i < response.length; i++) {
+          /*
+                    for (var i = 0; i < response.length; i++) {
 
-            var task = response[i];
-            console.log("pushing...")
-            console.dir(task)
-            ALL_TASKS.push(task);
-          }
-          */
+                      var task = response[i];
+                      console.log("pushing...")
+                      console.dir(task)
+                      ALL_TASKS.push(task);
+                    }
+                    */
 
           refreshList();
         },
@@ -109,7 +99,7 @@
 
         var task = ALL_TASKS[i];
         if (!task.completed || (task.completed && SHOW_COMPLETED_TASKS)) {
-            appendToList(task.id, task.name, task.completed);
+          appendToList(task.id, task.name, task.completed);
         }
       }
     }

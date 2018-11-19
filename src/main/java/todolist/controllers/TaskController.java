@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import todolist.entities.Task;
+import todolist.exceptions.InvalidTaskException;
+import todolist.exceptions.TaskNotFoundException;
 import todolist.repos.TaskRepository;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class TaskController {
         Task task = taskRepository.findById(id);
 
         if (task == null) {
-            logger.info("Task with id {} not found", id);
-            // TODO
+            String errorMessage = String.format("Task with id %d not found", id);
+            logger.error(errorMessage);
+            throw new TaskNotFoundException(errorMessage);
         }
 
         return task;
@@ -47,6 +50,8 @@ public class TaskController {
          * This method expects application/json HTTP format.
          */
 
+        validateTask(task); // validate before create
+
         logger.info("Creating new task with name {}" + task.getName());
         return taskRepository.save(task);
     }
@@ -61,11 +66,12 @@ public class TaskController {
         logger.info("Attempting to update task with id {}", task.getId());
 
         if (!taskRepository.existsById(task.getId())) {
-            logger.info("Task with id {} does not exist and cannot be updated", task.getId());
-            // TODO
+            String errorMessage = String.format("Task with id %d does not exist and cannot be updated", task.getId());
+            logger.error(errorMessage);
+            throw new InvalidTaskException(errorMessage);
         }
 
-        // TODO - validate name/etc in all scenarios
+        validateTask(task); // validate before update
 
         return taskRepository.save(task);
     }
@@ -77,10 +83,17 @@ public class TaskController {
         Task task = taskRepository.findById(id);
 
         if (task == null) {
-            logger.info("Task with id {} does not exist and cannot be delete", id);
-            // TODO
+            String errorMessage = String.format("Task with id %d does not exist and cannot be delete", id);
+            logger.error(errorMessage);
+            throw new TaskNotFoundException(errorMessage);
         }
 
         taskRepository.delete(task);
+    }
+
+    private void validateTask(Task task) {
+        if (task.getName() == null) {
+            throw new InvalidTaskException("Task name cannot be null");
+        }
     }
 }
