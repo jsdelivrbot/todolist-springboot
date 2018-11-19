@@ -11,10 +11,10 @@ public class Task {
 
     public Task() { } // for deserialization
 
-    public Task(long id, String name, boolean isComplete) {
+    public Task(long id, String name, boolean completed) {
         this.id = id;
         this.name = name;
-        this.isComplete = isComplete;
+        this.completed = completed;
     }
 
     @Id
@@ -31,10 +31,10 @@ public class Task {
     @Getter
     @Setter
     @Column
-    private boolean isComplete = false; // all new tasks are incomplete
+    private boolean completed = false; // all new tasks are incomplete
 
     @Override
     public String toString() {
-        return "Name: " + this.name + ", id: " + this.id + ", isComplete: " + this.isComplete;
+        return "Name: " + this.name + ", id: " + this.id + ", isComplete: " + this.completed;
     }
 }

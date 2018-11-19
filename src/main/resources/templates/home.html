@@ -1,12 +1,15 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
-    <link rel="stylesheet" href="https://cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
-    <link rel="stylesheet" href="https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+  <link rel="stylesheet" href="https://cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+  <link rel="stylesheet" href="https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <style>
-    .home {
+  .home {
         width: 50%;
         margin: auto;
         padding: 10px;
@@ -39,74 +42,141 @@
       max-width: 50%;
     }
 </style>
+
 <body>
-<div class="home">
+  <div class="home">
     <h1>TodoList</h1>
     <p>Welcome to <span th:text="${appName}">Our App</span> </p>
 
-    <div id="list">
-        <div id="item_1" class="list_item">
-            <img id="item_1_image" src="images/checked.png">
-            <span class="item_text"> Unordered list item sdfasdf</span>
-        </div>
-        <div id="item_2" class="list_item">
-            <img id="item_2_image" src="images/checked.png">
-            <span class="item_text"> Unordered list item 1</span>
-        </div>
-        <div id="item_3" class="list_item">
-            <img id="item_3_image" src="images/checked.png">
-            <span class="item_text"> Unordered list item 1</span>
-        </div>
-    </div>
+    <div id="list"> </div>
 
     <form id="new_task">
-        <div class="new_item">
-            <input type="text" id="new_task_text" value="Create new task..."><br>
-            <input class="create_task_button" type="submit" value="Create">
+      <div class="new_item">
+        <input type="text" id="new_task_text" value="Create new task..."><br>
+        <input class="create_task_button" type="submit" value="Create">
         </div>
     </form>
 
-</div>
-</body>
-<script>
+    <hr/>
 
-  $( "#new_task" ).submit(function( event ) {
-    console.log("NEW TASK: " + $("#new_task_text").val())
-    console.dir($("#list"))
+    <div id="item_${taskId}" class="list_item">
+      <img id="item_${taskId}_image" src="/Users/cseales/Desktop/unchecked.png">
+      <span class="item_text">Show completed tasks</span>
+    </div>
 
-    var newTaskText = $("#new_task_text").val();
-    var newTaskId = $("#list").children().length + 1;
+  </div>
+  <script>
 
-    $( "#list" ).append( `
-      <div id="item_${newTaskId}" class="list_item">
-        <img id="item_${newTaskId}_image" src="images/unchecked.png">
-        <span class="item_text"> ${newTaskText}</span>
-      </div>
-    ` );
+    var API_URL = "http://localhost:8080/api/task";
+    var SHOW_COMPLETED_TASKS = false;
 
-    event.preventDefault();
-  });
+    $(document).ready(function() {
+      $.ajax({
+        url: API_URL + "/all",
+        type: 'GET',
+        success: function(response) {
+          console.log("all response...");
+          console.dir(response)
 
-  $( '#list' ).on('click', '.list_item', function() {
+          for (var i = 0; i < response.length; i++) {
 
-     var itemImage = $(this).children('img')[0];
-     var isCurrentlyChecked = itemImage.src.indexOf("unchecked") === -1;
+            var task = response[i];
+            console.log('task...')
+            console.dir(task)
 
-     if (isCurrentlyChecked) {
-       $("#" + itemImage.id).attr('src', 'images/unchecked.png');
-     } else {
-       $("#" + itemImage.id).attr('src', 'images/checked.png');
-     }
-
-    $.ajax({
-        url: 'localhost:8080/blah',
-        type: 'PUT',
-        data: {
-            data: "tomato"
+            if (!task.completed || (task.completed && SHOW_COMPLETED_TASKS)) {
+                appendToList(task.id, task.name, task.completed);
+            }
+          }
         },
-        success: function () {
+        error: function(e) {
+          // TODO
         }
+      });
     });
-  });
-</script>
+
+    function appendToList(taskId, taskName, completed) {
+
+      var image = completed ? "checked" : "unchecked";
+
+      $("#list").append(`
+      <div id="item_${taskId}" class="list_item">
+        <img id="item_${taskId}_image" src="/Users/cseales/Desktop/${image}.png">
+        <span class="item_text"> ${taskName}</span>
+      </div>
+    `);
+    }
+
+    function removeFromList(taskId) {
+      $(`#item_${taskId}`).remove();
+    }
+
+    $("#new_task").submit(function(event) {
+      console.log("NEW TASK: " + $("#new_task_text").val())
+      console.dir($("#list"))
+
+      var newTaskText = $("#new_task_text").val();
+      $.ajax({
+        url: API_URL + "/new",
+        contentType: "application/json",
+        type: 'PUT',
+        data: JSON.stringify({
+          "name": newTaskText
+        }),
+        success: function(response) {
+          var taskId = response.id; // append to list using server-assigned ID
+          var completed = false; // all new tasks are incomplete
+
+          appendToList(taskId, newTaskText, completed)
+        },
+        error: function(e) {
+          // TODO
+          console.dir(e)
+        }
+      });
+
+      event.preventDefault();
+    });
+
+    $('#list').on('click', '.list_item', function() {
+
+      console.dir(this);
+
+      var taskId = this.id.split("_")[1];
+
+      console.log("taskId: " + taskId)
+
+      var itemImage = $(this).children('img')[0];
+      var isCurrentlyChecked = itemImage.src.indexOf("unchecked") === -1;
+
+      $.ajax({
+        url: API_URL + "/update",
+        contentType: "application/json",
+        type: 'POST',
+        data: JSON.stringify({
+          id: taskId,
+          name: "todo",
+          completed: !isCurrentlyChecked
+        }),
+        success: function(reponse) {
+
+          if (isCurrentlyChecked) {
+            $("#" + itemImage.id).attr('src', '/Users/cseales/Desktop/unchecked.png');
+          } else {
+
+            if (SHOW_COMPLETED_TASKS) {
+              $("#" + itemImage.id).attr('src', '/Users/cseales/Desktop/checked.png');
+            } else {
+              removeFromList(taskId);
+            }
+          }
+        },
+        error: function(e) {
+          // TODO
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>
